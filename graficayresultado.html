@@ -43,25 +43,15 @@
             console.log("("+x[i]+","+y[i]+")");
         }
 
-        function data(offset) {
-            var ret = [];
-            for (var x = 0; x <= 360; x += 10) {
-            var v = (offset + x) % 360;
-            ret.push({
-                x: x, 
-                y: Math.sin(Math.PI * v / 180).toFixed(4),
-                z: Math.cos(Math.PI * v / 180).toFixed(4)
-            });
-            }
-            return ret;
-        }
+        
         new Morris.Line({
         // ID of the element in which to draw the chart.
         element: 'myfirstchart',
         // Chart data records -- each entry in this array corresponds to a point on
         // the chart.
         data: [
-            data(0),
+            { x: x[0], y: y[0] },
+            { x: x[1], y: y[1] },
         ],
         // The name of the data record attribute that contains x-values.
         xkey: 'x',
@@ -79,3 +69,6 @@
     
 {% endblock %}
     
+
+
+
