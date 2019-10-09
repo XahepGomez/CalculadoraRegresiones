@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+
+{% block titulo %}
+    <h1 class="w3-jumbo"><b>Respuestas</b></h1>
+{% endblock %}
+
+
+{% block content %}
+    <div class="container">
+        <h1>Respuesta</h1>
+        <hr>
+        <div class="row">
+            <div class="col-md-6">
+                <h2>Gráfica</h2>
+                <hr>
+                <div id="myfirstchart"></div>
+                
+            </div>
+            <div class="col-md-6">
+                    <h2>Formulas</h2>
+                    <hr>
+                    <p>Metodo: {{ metodo }}</p>
+                    <p>Ecuación: Y = {{ rtas[0] }} + {{ rtas[1] }}X  + {{ rtas[2] }}X^2</p>
+                    <p>Sy = {{ rtas[3] }}</p>
+                    <p>Sy/x = {{ rtas[4] }}</p>
+                    <p>r = {{ rtas[5] }}</p>
+                    
+                    <form method="POST" action="{{ url_for('irInicio') }}">
+                        <button class="w3-button w3-black w3-padding-large w3-large w3-margin-top" > Volver a ingresar puntos </button>   
+                    </form>
+                    
+                </div>
+        </div>
+    </div>
+
+
+    <script>
+
+        var x = {{x|tojson|safe}}; 
+        var y = {{y|tojson|safe}}; 
+
+        for(i in x){
+            console.log("("+x[i]+","+y[i]+")");
+        }
+
+        function data(offset) {
+            var ret = [];
+            for (var x = 0; x <= 360; x += 10) {
+            var v = (offset + x) % 360;
+            ret.push({
+                x: x, 
+                y: Math.sin(Math.PI * v / 180).toFixed(4),
+                z: Math.cos(Math.PI * v / 180).toFixed(4)
+            });
+            }
+            return ret;
+        }
+        new Morris.Line({
+        // ID of the element in which to draw the chart.
+        element: 'myfirstchart',
+        // Chart data records -- each entry in this array corresponds to a point on
+        // the chart.
+        data: [
+            data(0),
+        ],
+        // The name of the data record attribute that contains x-values.
+        xkey: 'x',
+        // A list of names of data record attributes that contain y-values.
+        ykeys: ['y'],
+        // Labels for the ykeys -- will be displayed when you hover over the
+        // chart.
+        labels: ['y'],
+        resize:true
+        });
+    
+    
+    </script>
+
+    
+{% endblock %}
+    
