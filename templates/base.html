@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<title>Calculadora - XAHEP</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
+<script src="http://cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.css">
+<script src="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.min.js"></script>
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+<style>
+body,h1,h2,h3,h4,h5 {font-family: "Poppins", sans-serif}
+body {font-size:16px;}
+.w3-half img{margin-bottom:-6px;margin-top:16px;opacity:0.8;cursor:pointer}
+.w3-half img:hover{opacity:1}
+</style>
+<body>
+
+<!-- Sidebar/menu -->
+<nav class="w3-sidebar w3-red w3-collapse w3-top w3-large w3-padding" style="z-index:3;width:300px;font-weight:bold;" id="mySidebar"><br>
+  <div class="w3-container">
+    <h3 class="w3-padding-64"><b>Caluladora<br>Metodos</b></h3>
+  </div>
+  <div class="w3-bar-block">
+    <form method="POST" action="{{ url_for('irInicio') }}">
+      <button class="w3-bar-item w3-button w3-hover-white"> Inicio</button>
+    </form>
+    <form method="POST" action="{{ url_for('irTomarPuntos') }}">
+      <button class="w3-bar-item w3-button w3-hover-white"> Ingresar puntos</button>
+    </form>
+    <form method="POST" action="{{ url_for('irInstrucciones') }}">
+        <button class="w3-bar-item w3-button w3-hover-white"> Instrucciones</button>
+    </form>
+  </div>
+
+</nav>
+
+<!-- !PAGE CONTENT! -->
+<div class="w3-main" style="margin-left:340px;margin-right:40px">
+
+  <!-- Header -->
+  <div class="w3-container" style="margin-top:80px" id="showcase">
+    {% block titulo %}
+
+    {% endblock %}
+    
+    <hr style="width:50px;border:5px solid red" class="w3-round">
+
+    {% block content %}
+
+    {% endblock %}
+
+    
+  </div>
+
+<!-- End page content -->
+</div>
+
+<!-- W3.CSS Container -->
+<div class="w3-light-grey w3-container w3-padding-32" style="margin-top:75px;padding-right:58px"><p class="w3-right">Made by <a title="W3.CSS" target="_blank" class="w3-hover-opacity">Xahep</a></p></div>
+
+
+<script>
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block titulo %}
+    <h1 class="w3-jumbo"><b>Instrucciones</b></h1>
+{% endblock %}
+
+{% block content %}
+
+    <p>No sé que poner</p>
+    <form method="POST" action="{{ url_for('irInicio') }}">
+        <button class="w3-button w3-black w3-padding-large w3-large w3-margin-top">Ir al inicio</button>
+    </form>
+
+{% endblock %}

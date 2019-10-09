@@ -1,0 +1,143 @@
+{% extends "base.html" %}
+
+{% block titulo %}
+<h1 class="w3-jumbo"><b>Ingresar puntos</b></h1>
+{% endblock %}
+
+
+{% block content %}
+
+    <p id = "msg">Cuantos puntos cardinales desea añadir?</p>
+    <input id="puntosTabla" type="text">
+    <p></p>
+    <button onclick="crearTabla()" style="display: inline;" id="enviar" class="w3-button w3-black w3-padding-large w3-large w3-margin-top">Crear tabla</button>
+
+
+    <div class="container" id = "tablaymetodos" style="display: none;">
+
+        <div class="row">
+            
+            <div class="col-md-6">    
+                <h2>Ingrese los puntos en la tabla</h2>
+                <hr>
+                <table id = "tabla"></table>      
+            </div>
+            <div class="col-md-6">
+                <h2>Seleccione el metodo</h2>
+                <hr>
+                <div style="display: none" id ="metodos">
+                    <form method="POST" action="{{ url_for('irgraficaResultado') }}">
+                        <button  class="sender w3-button w3-black w3-padding-large w3-large w3-margin-top" id="subir" data-value=1 style="display: inline;" > 1. Regresión lineal </button>  
+                    </form>
+                    <hr> 
+                    <form method="POST" action="{{ url_for('irgraficaResultado') }}">
+                        <button  class="sender w3-button w3-black w3-padding-large w3-large w3-margin-top" id="subir" data-value=2 style="display: inline;"> 2. Modelo exponencial </button>   
+                    </form>
+                    <hr>
+                    <form method="POST" action="{{ url_for('irgraficaResultado') }}">
+                        <button  class="sender w3-button w3-black w3-padding-large w3-large w3-margin-top" id="subir" data-value=3 style="display: inline;"> 3. Ecuación de potencias</button>   
+                    </form>
+                    <hr>
+                    <form method="POST" action="{{ url_for('irgraficaResultado') }}">
+                        <button  class="sender w3-button w3-black w3-padding-large w3-large w3-margin-top" id="subir" data-value=4 style="display: inline;"> 4. Razón de crecimiento</button>   
+                    </form>
+                    <hr>
+                    <form method="POST" action="{{ url_for('irgraficaResultado') }}">
+                        <button  class="sender w3-button w3-black w3-padding-large w3-large w3-margin-top" id="subir" data-value=5 style="display: inline;"> 5. Regresión polinomial (grado 2)</button>   
+                    </form>
+                    <hr>
+                    <form method="POST" action="{{ url_for('irgraficaResultado') }}">
+                        <button  class="sender w3-button w3-black w3-padding-large w3-large w3-margin-top" id="subir" data-value=6 style="display: inline;"> 6. Regresión polinomial (grado 3)</button>   
+                    </form>
+                </div>           
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+
+        var puntosX = [];
+        var puntosY = [];
+        var pos = 0;
+    
+        function crearTabla(){
+            
+            document.getElementById("msg").style.display = "none";
+            document.getElementById("enviar").style.display = "none";
+            var x = document.getElementById("puntosTabla").value;
+            document.getElementById("puntosTabla").style.display = "none";
+            document.getElementById("tablaymetodos").style.display = "inline";
+            var divMetodos = document.getElementById("metodos").style.display = "inline";
+            
+                
+            //CREACIÓN DE LA TABLA
+            var body = document.getElementsByTagName("body")[0];
+            var tabla = document.getElementById("tabla");
+            var tblBody = document.createElement("tbody");
+    
+            // Crea las celdas
+            for (var i = 0; i < parseInt(x)+1; i++) {
+                var hilera = document.createElement("tr");
+                for (var j = 0; j < 2; j++) {
+                    var celda = document.createElement("td");
+                    if(i == 0 && j == 0){
+                        var textoCelda = document.createTextNode(" Eje X");
+                        celda.style = "text-align:center;";
+                        celda.appendChild(textoCelda);
+                        hilera.appendChild(celda);
+                    }else if (i == 0 && j == 1){
+                        var textoCelda = document.createTextNode(" Eje Y");
+                        celda.style = "text-align:center;";
+                        celda.appendChild(textoCelda);
+                        hilera.appendChild(celda);
+                    }else{
+                        var input = document.createElement("input");
+                        input.name = pos;
+                        celda.appendChild(input);
+                        hilera.appendChild(celda); 
+                        pos++;
+                    }
+                        
+                }
+                tblBody.appendChild(hilera);
+            }
+    
+            tabla.appendChild(tblBody);
+            tabla.setAttribute("border", "1");
+            document.getElementById("subir").style.display = "inline";
+    
+        }
+            
+    
+            //Envio los puntos
+            var elements = document.querySelectorAll(".sender");
+            for(var i = 0; i < elements.length ; i++){
+                elements[i].addEventListener("click", function(){
+                    console.log($(this).attr('data-value'));
+                    var conX = 0;
+                    var conY = 0;
+                        
+                    for(var i=0;i<pos;i++){
+                        if(i%2 == 0){
+                            puntosX[conX] = document.getElementsByName(i)[0].value;
+                            conX++;
+                        }else{
+                            puntosY[conY] = document.getElementsByName(i)[0].value;
+                            conY++;
+                        }
+                    }
+    
+                    for(var i=0;i<conX;i++){
+                        console.log("(" + puntosX[i]+ "," +puntosY[i] + ")");
+                    }
+    
+                    //Enviar el vector
+                    $.post("graficaResultado", {"puntosX":puntosX, "puntosY":puntosY,"metodo":$(this).attr('data-value')});
+    
+                });
+            }
+
+    </script>
+    
+{% endblock %}
