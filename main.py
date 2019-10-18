@@ -52,6 +52,7 @@ def graficaResultado():
         x = request.form.getlist('puntosX[]')
         y = request.form.getlist('puntosY[]')
         metodo = request.form['metodo']
+        print("Recibir puntos")
         print("Puntos X", x)
         print("Puntos y", y)
         print("Metodo pedido",int(metodo))
@@ -70,23 +71,13 @@ def graficaResultado():
 # Metodos:
 
 def metodo1():
-    a = np.array([[2.0,4.3,6],[4,5,6],[3,1,-2]])
-    b = np.array([18,24,4])
+    a = np.array([[4,1,0],[1,4,1],[0,1,4]])
+    b = np.array([-12,24,60])
     rtas = np.linalg.solve(a,b)
     print(rtas[0])
     print(rtas[1])
     print(rtas[2])
     return 200
-
-def metodo2():
-    global x
-    xe = x
-    print("X vale = ",xe)
-    return 200
-
-def metodo3():
-    return 45364
-
 
 def regresionLinealGradoDos():
     global x
@@ -142,14 +133,6 @@ def regresionLinealGradoDos():
     print("Rta = ",rta)
 
     return rta
-        
-
-
-
-
-
-
-
 
 
 
@@ -177,6 +160,13 @@ def irgraficaResultado():
 def irInstrucciones():
     if request.method == 'POST':
         return redirect("/instrucciones")
+
+
+
+
+
+
+
 
 
 
