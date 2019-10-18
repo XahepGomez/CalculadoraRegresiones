@@ -7,14 +7,13 @@
 
 {% block content %}
     <div class="container">
-        <h1>Respuesta</h1>
         <hr>
         <div class="row">
             <div class="col-md-6">
                 <h2>Gráfica</h2>
                 <hr>
-                <div id="myfirstchart"></div>
-                
+                <div id="charts"></div>
+                <div id="curve_chart" style="width: 500px;"></div>
             </div>
             <div class="col-md-6">
                     <h2>Formulas</h2>
@@ -38,34 +37,88 @@
 
         var x = {{x|tojson|safe}}; 
         var y = {{y|tojson|safe}}; 
-
+        var metodo = {{metodo}};
+        var rta = {{ rtas }};
+        //Saber cual metodo desea el usuario
+        console.log(metodo);
+        //Cambio el tipo de dato que me llega
         for(i in x){
-            console.log("("+x[i]+","+y[i]+")");
+            x[i] = parseFloat(x[i]);
+        }
+        for(i in y){
+            y[i] = parseFloat(y[i]);
         }
 
+        //Primera gráfica (Puntos)
+        google.load('visualization','1.0',{'packages':['corechart']});
+        google.setOnLoadCallback(dibujar);
+        function dibujar(){
+            var data = new google.visualization.DataTable();
+            data.addColumn('number','x');
+            data.addColumn('number','y');
+            //Muestro los puntos en consola
+            for(i in y){
+                console.log("("+x[i]+","+y[i]+")");
+            }   
+            for (var i = 0; i < x.length; i++) {
+                data.addRows(
+                    [   
+                        [x[i],y[i]]
+                    ]
+                );
+            }
+            
+
+            var opciones = {'width':500,'heigth':300,title:'Gráfica puntos'};
+            var grafica = new google.visualization.ScatterChart(document.getElementById('charts'));
+            grafica.draw(data,opciones);
+        }
+
+
+
+        //Segunda gráfica
+        google.charts.load('current', {'packages':['corechart']});
+        google.charts.setOnLoadCallback(drawChart);
         
-        new Morris.Line({
-        // ID of the element in which to draw the chart.
-        element: 'myfirstchart',
-        // Chart data records -- each entry in this array corresponds to a point on
-        // the chart.
-        data: [
-            { x: x[0], y: y[0] },
-            { x: x[1], y: y[1] },
-        ],
-        // The name of the data record attribute that contains x-values.
-        xkey: 'x',
-        // A list of names of data record attributes that contain y-values.
-        ykeys: ['y'],
-        // Labels for the ykeys -- will be displayed when you hover over the
-        // chart.
-        labels: ['y'],
-        resize:true
-        });
-    
+        function funcion5(x){
+            console.log("solución");
+            var g = rta[0]+(rta[1]*(x))+(rta[2]*(x*x));
+            console.log(g);;
+            return g;
+        }
+
+        function drawChart() {
+          
+            var data = new google.visualization.DataTable();
+            data.addColumn('number','x');
+            data.addColumn('number','y');
+            //Muestro los puntos en consola
+            for (var i = 0; i < x.length; i++) {
+                if(metodo == 5){
+                    data.addRows(
+                        [   
+                        [x[i],funcion5(x[i])]
+                        ]
+                    );
+                }
+            }
+
+
+          var options = {
+            title: 'Gráfica función',
+            curveType: 'function',
+            legend: { position: 'bottom' }
+          };
+  
+          var chart = new google.visualization.LineChart(document.getElementById('curve_chart'));
+  
+          chart.draw(data, options);
+        }
     
     </script>
 
     
 {% endblock %}
+    
+
     
