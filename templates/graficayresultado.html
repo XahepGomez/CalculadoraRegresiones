@@ -6,6 +6,7 @@
 
 
 {% block content %}
+    
     <div class="container">
         <hr>
         <div class="row">
@@ -18,11 +19,11 @@
             <div class="col-md-6">
                     <h2>Formulas</h2>
                     <hr>
-                    <p>Metodo: {{ metodo }}</p>
-                    <p>Ecuación: Y = {{ rtas[0] }} + {{ rtas[1] }}X  + {{ rtas[2] }}X^2</p>
-                    <p>Sy = {{ rtas[3] }}</p>
-                    <p>Sy/x = {{ rtas[4] }}</p>
-                    <p>r = {{ rtas[5] }}</p>
+                    <p id="metodo"></p>
+                    <p id="ecuacion"></p>
+                    <p id="sy"></p>
+                    <p id="syx"></p>
+                    <p id=r></p>
                     
                     <form method="POST" action="{{ url_for('irInicio') }}">
                         <button class="w3-button w3-black w3-padding-large w3-large w3-margin-top" > Volver a ingresar puntos </button>   
@@ -39,8 +40,10 @@
         var y = {{y|tojson|safe}}; 
         var metodo = {{metodo}};
         var rta = {{ rtas }};
+
         //Saber cual metodo desea el usuario
         console.log(metodo);
+
         //Cambio el tipo de dato que me llega
         for(i in x){
             x[i] = parseFloat(x[i]);
@@ -48,6 +51,38 @@
         for(i in y){
             y[i] = parseFloat(y[i]);
         }
+
+        //Funciones para gráficar
+
+        function funcion1(x){
+            var y = rta[0]+(rta[1]*x);
+            return y;
+        }
+
+        //Faltaaa
+        function funcion2(x){
+            var x = Math.pow();
+            var y = rta[2];
+            return y;
+        }
+
+        function funcion3(x){
+            var y = rta[2]*Math.pow(x,rta[3]);
+            return y;
+        }
+
+        function funcion4(x){
+            var y = (rta[2]*x)/(rta[3]+x);
+            console.log(y);
+            return y;
+        }
+
+        function funcion5(x){
+            var y = rta[0]+(rta[1]*(x))+(rta[2]*(x*x));
+            return y;
+        }
+
+
 
         //Primera gráfica (Puntos)
         google.load('visualization','1.0',{'packages':['corechart']});
@@ -68,7 +103,6 @@
                 );
             }
             
-
             var opciones = {'width':500,'heigth':300,title:'Gráfica puntos'};
             var grafica = new google.visualization.ScatterChart(document.getElementById('charts'));
             grafica.draw(data,opciones);
@@ -76,31 +110,72 @@
 
 
 
-        //Segunda gráfica
+        //Segunda gráfica (Función)
         google.charts.load('current', {'packages':['corechart']});
         google.charts.setOnLoadCallback(drawChart);
         
-        function funcion5(x){
-            console.log("solución");
-            var g = rta[0]+(rta[1]*(x))+(rta[2]*(x*x));
-            console.log(g);;
-            return g;
-        }
-
         function drawChart() {
           
             var data = new google.visualization.DataTable();
             data.addColumn('number','x');
             data.addColumn('number','y');
-            //Muestro los puntos en consola
             for (var i = 0; i < x.length; i++) {
-                if(metodo == 5){
+                if(metodo == 1){
+                    data.addRows(
+                        [   
+                        [x[i],funcion1(x[i])]
+                        ]
+                    );
+                    document.getElementById("metodo").innerText = "Regresión lineal";
+                    document.getElementById("ecuacion").innerText = "y= "+rta[0]+" + "+rta[1]+"x";
+                    document.getElementById("sy").innerText="Sy= No hay";
+                    document.getElementById("syx").innerText="Sy/x= No hay";
+                    document.getElementById("r").innerText="R= No hay";
+                }else if(metodo == 2){
+                    
+                    document.getElementById("metodo").innerText="--- Modelo exponencial";
+                    document.getElementById("ecuacion").innerText = "y= "+rta[0]+" + "+rta[1]+"x";
+                    document.getElementById("sy").innerText="Sy= No hay";
+                    document.getElementById("syx").innerText="Sy/x= No hay";
+                    document.getElementById("r").innerText="R= No hay";
+                }else if(metodo == 3){
+                    data.addRows(
+                        [   
+                        [x[i],funcion3(x[i])]
+                        ]
+                    );
+                    document.getElementById("metodo").innerText="Ecuación de potencias";
+                    document.getElementById("ecuacion").innerText = "y= "+rta[2]+"* x^ "+rta[3];
+                    document.getElementById("sy").innerText="Sy= No hay";
+                    document.getElementById("syx").innerText="Sy/x= No hay";
+                    document.getElementById("r").innerText="R= No hay";
+                    
+                }else if(metodo == 4){
+                    data.addRows(
+                        [   
+                        [x[i],funcion4(x[i])]
+                        ]
+                    );
+                    document.getElementById("metodo").innerText = "Razón de crecimiento";
+                    document.getElementById("ecuacion").innerText = "y= ("+rta[2]+"*x) / ("+rta[3]+"+x)";
+                    document.getElementById("sy").innerText="Sy= No hay";
+                    document.getElementById("syx").innerText="Sy/x= No hay";
+                    document.getElementById("r").innerText="R= No hay";
+                }else if(metodo == 5){
                     data.addRows(
                         [   
                         [x[i],funcion5(x[i])]
                         ]
                     );
+                    document.getElementById("metodo").innerText = "Regresión polinomial (Grado 2)";
+                    document.getElementById("ecuacion").innerText = "y= "+rta[0]+" + "+rta[1]+"x + "+rta[2]+"x^2";
+                    document.getElementById("sy").innerText="Sy= "+rta[3];
+                    document.getElementById("syx").innerText="Sy/x= "+rta[4];
+                    document.getElementById("r").innerText="R= "+rta[5];
+                }else if(metodo == 6){
+
                 }
+
             }
 
 
@@ -119,6 +194,4 @@
 
     
 {% endblock %}
-    
-
     
