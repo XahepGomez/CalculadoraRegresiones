@@ -4,7 +4,7 @@ from flask import Flask, escape, request,render_template,redirect,g
 app = Flask(__name__)
 
 
-#Hacer vectores y matrices
+#Manejar los vectores y matrices
 import numpy as np
 import math
 
@@ -15,7 +15,7 @@ y = []
 metodo = 24
 rta = []
 
-#Variables para los metodos
+#Variables globales para los metodos
 sumXY = 0.0
 sumX2 = 0.0
 sumX3 = 0.0
@@ -24,10 +24,13 @@ sumatoriaX = 0.0
 sumatoriaY = 0.0
 sumX2Y = 0.0
 promY = 0.0
+promX = 0.0
 st = 0.0
 sr = 0.0
+alpha = 0.0
+beta = 0.0
 
-
+# Rende_templates, y recibir datos por el metodo post
 @app.route('/')
 def inicio():
     return render_template('inicio.html')
@@ -39,7 +42,6 @@ def tomarPuntos():
 @app.route('/instrucciones')
 def instrucciones():
     return render_template('instrucciones.html')
-
     
 @app.route('/graficaResultado',methods=['GET','POST'])
 def graficaResultado():
@@ -52,16 +54,30 @@ def graficaResultado():
         x = request.form.getlist('puntosX[]')
         y = request.form.getlist('puntosY[]')
         metodo = request.form['metodo']
-        print("Recibir puntos")
+        
         print("Puntos X", x)
         print("Puntos y", y)
         print("Metodo pedido",int(metodo))
-        if(int(metodo) == 5):
-            rta = regresionLinealGradoDos()
+
+        if(int(metodo) == 1):
+            rta = RegresionLineal(x,y)
+        elif(int(metodo) == 2):
+            rta = TransformacionesLogaritmicas()
+        elif(int(metodo) == 3):
+            rta = EcuacionesDePotencias()
+        elif(int(metodo) == 4):
+            rta = RazonDeCrecimiento()
+        elif(int(metodo) == 5):
+            rta = RegresionLinealGradoDos()
+        elif(int(metodo) == 6):
+            print("javier")
         
         return '200'
     
     return render_template('graficayresultado.html',x=x,y=y,metodo=metodo,rtas = rta)
+
+
+
 
 
 
@@ -79,7 +95,95 @@ def metodo1():
     print(rtas[2])
     return 200
 
-def regresionLinealGradoDos():
+#------------------- Método 1 -------------------
+def RegresionLineal(puntoX,puntoY):
+    global sumatoriaX
+    global sumatoriaY
+    global sumXY
+    global sumX2
+    global promY
+    global promX
+
+    for i in range(len(puntoX)):
+        sumatoriaX += float(puntoX[i])
+        sumatoriaY += float(puntoY[i])
+        sumXY += float(puntoX[i])*float(puntoY[i])
+        sumX2 += pow(float(puntoX[i]),2) 
+
+    promY = sumatoriaY/len(puntoX)
+    promX = sumatoriaX/len(puntoX)
+
+    a1 = ((len(puntoX)*sumXY)-(sumatoriaX*sumatoriaY))/(len(puntoX)* sumX2-(pow(sumatoriaX,2)))
+    a0 = promY-(a1*promX)
+
+    rta.append(a0)
+    rta.append(a1)
+    print("Rtas:",rta)
+    return rta
+
+#------------------- Método 2 -------------------
+def TransformacionesLogaritmicas():
+    global x
+    global y
+
+    logy=[]
+    for i in range(len(x)):
+        logy.append(math.log(float(y[i])))
+
+    rta= RegresionLineal(x,logy)
+
+    alpha=pow(math.e,float(rta[0]))
+    beta=float(rta[1])
+
+    rta.append(alpha)
+    rta.append(beta)
+    print("Rtas",rta)
+    return rta
+
+#------------------- Método 3 -------------------
+def EcuacionesDePotencias():
+    global x
+    global y
+
+    logy=[]
+    logx=[]
+
+    for i in range(len(x)):
+        logy.append(math.log10(float(y[i])))
+        logx.append(math.log10(float(x[i])))
+   
+    rta= RegresionLineal(logx,logy)
+
+    alpha=math.pow(10,(rta[0]))
+    beta=rta[1]
+
+    rta.append(alpha)
+    rta.append(beta)
+    print("Rtas",rta)
+    return rta
+
+#------------------- Método 4 -------------------
+def RazonDeCrecimiento():
+    global x
+    global y
+
+    sobrex = []
+    sobrey = []
+    for i in range(len(x)):
+        sobrex.append(1/float(x[i]))
+        sobrey.append(1/float(y[i]))
+    
+    rta = RegresionLineal(sobrex,sobrey)
+
+    alpha = 1/float(rta[0])
+    beta = float(rta[1])/float(rta[0]) 
+    rta.append(alpha)
+    rta.append(beta)
+    print(rta)
+    return rta
+
+#------------------- Método 5 -------------------
+def RegresionLinealGradoDos():
     global x
     global y
     global sumXY
@@ -120,6 +224,8 @@ def regresionLinealGradoDos():
         sr += pow(float(y[i])-gauss[0]-(gauss[1]*float(x[i]))-pow(float(x[i]),2)*gauss[2],2)
 
     sy =  math.sqrt(st/(len(x)-1))
+    
+    print("Error ",math.fabs(len(x)-3))
     syx = math.sqrt(sr/(len(x)-3))
     r = math.sqrt((st-sr)/st)*100
 
@@ -134,6 +240,17 @@ def regresionLinealGradoDos():
 
     return rta
 
+#------------------- Método 6-------------------
+
+
+    
+
+
+
+
+
+
+
 
 
 
@@ -141,6 +258,7 @@ def regresionLinealGradoDos():
 
 
 #Redirect:
+
 @app.route("/irInicio",methods=['GET','POST'])
 def irInicio():
     if request.method == 'POST':
@@ -160,8 +278,6 @@ def irgraficaResultado():
 def irInstrucciones():
     if request.method == 'POST':
         return redirect("/instrucciones")
-
-
 
 
 
