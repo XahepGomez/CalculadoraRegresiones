@@ -20,6 +20,7 @@
                     <h2>Formulas</h2>
                     <hr>
                     <p id="metodo"></p>
+                    <br></br>
                     <p id="ecuacion"></p>
                     <p id="sy"></p>
                     <p id="syx"></p>
@@ -59,21 +60,18 @@
             return y;
         }
 
-        //Faltaaa
         function funcion2(x){
-            var x = Math.pow();
-            var y = rta[2];
+            var y = rta[5]*Math.pow(Math.E,(rta[6]*x));
             return y;
         }
 
         function funcion3(x){
-            var y = rta[2]*Math.pow(x,rta[3]);
+            var y = rta[5]*Math.pow(x,rta[6]);
             return y;
         }
 
         function funcion4(x){
-            var y = (rta[2]*x)/(rta[3]+x);
-            console.log(y);
+            var y = (rta[5]*x)/(rta[6]+x);
             return y;
         }
 
@@ -82,7 +80,10 @@
             return y;
         }
 
-
+        function funcion6(x){
+            var y = rta[0]+(rta[1]*(x))+(rta[2]*(x*x))+(rta[3]*(x*x*x));
+            return y;
+        }
 
         //Primera gráfica (Puntos)
         google.load('visualization','1.0',{'packages':['corechart']});
@@ -128,16 +129,21 @@
                     );
                     document.getElementById("metodo").innerText = "Regresión lineal";
                     document.getElementById("ecuacion").innerText = "y= "+rta[0]+" + "+rta[1]+"x";
-                    document.getElementById("sy").innerText="Sy= No hay";
-                    document.getElementById("syx").innerText="Sy/x= No hay";
-                    document.getElementById("r").innerText="R= No hay";
+                    document.getElementById("sy").innerText="Sy= "+rta[2];
+                    document.getElementById("syx").innerText="Sy/x= "+rta[3];
+                    document.getElementById("r").innerText="R= "+rta[4];
                 }else if(metodo == 2){
-                    
-                    document.getElementById("metodo").innerText="--- Modelo exponencial";
-                    document.getElementById("ecuacion").innerText = "y= "+rta[0]+" + "+rta[1]+"x";
-                    document.getElementById("sy").innerText="Sy= No hay";
-                    document.getElementById("syx").innerText="Sy/x= No hay";
-                    document.getElementById("r").innerText="R= No hay";
+                    //Falta la función
+                    data.addRows(
+                        [   
+                        [x[i],funcion2(x[i])]
+                        ]
+                    );
+                    document.getElementById("metodo").innerText="Modelo exponencial";
+                    document.getElementById("ecuacion").innerText = "y= "+rta[5]+"*e^("+rta[6]+"*x)";
+                    document.getElementById("sy").innerText="Sy= "+rta[2];
+                    document.getElementById("syx").innerText="Sy/x= "+rta[3];
+                    document.getElementById("r").innerText="R= "+rta[4];
                 }else if(metodo == 3){
                     data.addRows(
                         [   
@@ -145,10 +151,10 @@
                         ]
                     );
                     document.getElementById("metodo").innerText="Ecuación de potencias";
-                    document.getElementById("ecuacion").innerText = "y= "+rta[2]+"* x^ "+rta[3];
-                    document.getElementById("sy").innerText="Sy= No hay";
-                    document.getElementById("syx").innerText="Sy/x= No hay";
-                    document.getElementById("r").innerText="R= No hay";
+                    document.getElementById("ecuacion").innerText = "y= "+rta[5]+"* x^ "+rta[6];
+                    document.getElementById("sy").innerText="Sy= "+rta[2];
+                    document.getElementById("syx").innerText="Sy/x= "+rta[3];
+                    document.getElementById("r").innerText="R= "+rta[4];
                     
                 }else if(metodo == 4){
                     data.addRows(
@@ -157,10 +163,10 @@
                         ]
                     );
                     document.getElementById("metodo").innerText = "Razón de crecimiento";
-                    document.getElementById("ecuacion").innerText = "y= ("+rta[2]+"*x) / ("+rta[3]+"+x)";
-                    document.getElementById("sy").innerText="Sy= No hay";
-                    document.getElementById("syx").innerText="Sy/x= No hay";
-                    document.getElementById("r").innerText="R= No hay";
+                    document.getElementById("ecuacion").innerText = "y= ("+rta[5]+"*x) / ("+rta[6]+"+x)";
+                    document.getElementById("sy").innerText="Sy= "+rta[2];
+                    document.getElementById("syx").innerText="Sy/x= "+rta[3];
+                    document.getElementById("r").innerText="R= "+rta[4];
                 }else if(metodo == 5){
                     data.addRows(
                         [   
@@ -173,7 +179,16 @@
                     document.getElementById("syx").innerText="Sy/x= "+rta[4];
                     document.getElementById("r").innerText="R= "+rta[5];
                 }else if(metodo == 6){
-
+                    data.addRows(
+                        [   
+                        [x[i],funcion6(x[i])]
+                        ]
+                    );
+                    document.getElementById("metodo").innerText = "Regresión polinomial (Grado 3)";
+                    document.getElementById("ecuacion").innerText = "y= "+rta[0]+" + "+rta[1]+"x + "+rta[2]+"x^2 + "+rta[3]+"x^3";
+                    document.getElementById("sy").innerText="Sy= "+rta[4];
+                    document.getElementById("syx").innerText="Sy/x= "+rta[5];
+                    document.getElementById("r").innerText="R= "+rta[6];
                 }
 
             }

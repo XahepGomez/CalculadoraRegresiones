@@ -9,6 +9,7 @@
 
     <p id = "msg">Cuantos puntos cardinales desea añadir?</p>
     <input id="puntosTabla" type="text">
+    <p id="msg2"></p>
     <p></p>
     <button onclick="crearTabla()" style="display: inline;" id="enviar" class="w3-button w3-black w3-padding-large w3-large w3-margin-top">Crear tabla</button>
 
@@ -23,7 +24,7 @@
                 <table id = "tabla"></table>      
             </div>
             <div class="col-md-6">
-                <h2>Seleccione el metodo</h2>
+                <h2>Seleccione el método</h2>
                 <hr>
                 <div style="display: none" id ="metodos">
                     <form method="POST" action="{{ url_for('irgraficaResultado') }}">
@@ -62,52 +63,56 @@
         var pos = 0;
     
         function crearTabla(){
-            
-            document.getElementById("msg").style.display = "none";
-            document.getElementById("enviar").style.display = "none";
             var x = document.getElementById("puntosTabla").value;
-            document.getElementById("puntosTabla").style.display = "none";
-            document.getElementById("tablaymetodos").style.display = "inline";
-            var divMetodos = document.getElementById("metodos").style.display = "inline";
+            if(x != ""){
+                document.getElementById("msg").style.display = "none";
+                document.getElementById("msg2").style.display = "none";
+                document.getElementById("enviar").style.display = "none";   
+                document.getElementById("puntosTabla").style.display = "none";
+                document.getElementById("tablaymetodos").style.display = "inline";
+                var divMetodos = document.getElementById("metodos").style.display = "inline";
             
                 
-            //CREACIÓN DE LA TABLA
-            var body = document.getElementsByTagName("body")[0];
-            var tabla = document.getElementById("tabla");
-            var tblBody = document.createElement("tbody");
+                //CREACIÓN DE LA TABLA
+                var body = document.getElementsByTagName("body")[0];
+                var tabla = document.getElementById("tabla");
+                var tblBody = document.createElement("tbody");
     
-            // Crea las celdas
-            for (var i = 0; i < parseInt(x)+1; i++) {
-                var hilera = document.createElement("tr");
-                for (var j = 0; j < 2; j++) {
-                    var celda = document.createElement("td");
-                    if(i == 0 && j == 0){
-                        var textoCelda = document.createTextNode(" Eje X");
-                        celda.style = "text-align:center;";
-                        celda.appendChild(textoCelda);
-                        hilera.appendChild(celda);
-                    }else if (i == 0 && j == 1){
-                        var textoCelda = document.createTextNode(" Eje Y");
-                        celda.style = "text-align:center;";
-                        celda.appendChild(textoCelda);
-                        hilera.appendChild(celda);
-                    }else{
-                        var input = document.createElement("input");
-                        input.name = pos;
-                        celda.appendChild(input);
-                        hilera.appendChild(celda); 
-                        pos++;
-                    }
+                // Crea las celdas
+                for (var i = 0; i < parseInt(x)+1; i++) {
+                    var hilera = document.createElement("tr");
+                    for (var j = 0; j < 2; j++) {
+                        var celda = document.createElement("td");
+                        if(i == 0 && j == 0){
+                            var textoCelda = document.createTextNode(" Eje X");
+                            celda.style = "text-align:center;";
+                            celda.appendChild(textoCelda);
+                            hilera.appendChild(celda);
+                        }else if (i == 0 && j == 1){
+                            var textoCelda = document.createTextNode(" Eje Y");
+                            celda.style = "text-align:center;";
+                            celda.appendChild(textoCelda);
+                            hilera.appendChild(celda);
+                        }else{
+                            var input = document.createElement("input");
+                            input.name = pos;
+                            celda.appendChild(input);
+                            hilera.appendChild(celda); 
+                            pos++;
+                        }   
                         
+                    }
+                    tblBody.appendChild(hilera);
                 }
-                tblBody.appendChild(hilera);
+    
+                tabla.appendChild(tblBody);
+                tabla.setAttribute("border", "1");
+                document.getElementById("subir").style.display = "inline";
+                }else{
+                    document.getElementById("msg2").innerText="Debes ingresar un valor número indicando el número de puntos";
+                }
+    
             }
-    
-            tabla.appendChild(tblBody);
-            tabla.setAttribute("border", "1");
-            document.getElementById("subir").style.display = "inline";
-    
-        }
             
     
             //Envio los puntos
